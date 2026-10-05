@@ -257,7 +257,7 @@ async function onText(msg) {
 
 // ---------- main ----------
 async function main() {
-  if (!config.BOT_TOKEN) { console.error("Set TELEGRAM_BOT_TOKEN dulu"); process.exit(1); }
+  if (!config.BOT_TOKEN || config.BOT_TOKEN.includes("GANTI")) { console.error("Isi TELEGRAM_BOT_TOKEN di file .env dulu (token dari @BotFather)"); process.exit(1); }
   await store.init();
   try { store.encryptCookie("test"); }
   catch (e) { console.error("ENCRYPTION:", e.message); process.exit(1); }
