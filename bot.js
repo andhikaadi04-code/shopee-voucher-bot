@@ -1,4 +1,14 @@
 "use strict";
+/** Self-install: kalau node_modules belum ada (fresh upload ke panel),
+ *  install otomatis sekali jalan. */
+const _path = require("node:path");
+const _fs = require("node:fs");
+if (!_fs.existsSync(_path.join(__dirname, "node_modules"))) {
+  console.log("[setup] node_modules belum ada — install dependencies dulu (sekali saja)...");
+  require("node:child_process").execSync("npm install --no-audit --no-fund", { cwd: __dirname, stdio: "inherit" });
+  console.log("[setup] install selesai.");
+}
+
 /** Bot Telegram auto-klaim voucher ShopeeFood — Node.js.
  *  Alur: monitor -> admin /set KODE JAM -> user kirim kode -> verifikasi ->
  *  cookie -> verifikasi nama+nomor -> YA -> auto-klaim tepat jadwal. */
