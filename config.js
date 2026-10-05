@@ -1,6 +1,7 @@
 "use strict";
-/** Konfigurasi — semua rahasia lewat environment variable. */
+/** Konfigurasi — dari environment variable ATAU file .env di folder bot. */
 const path = require("node:path");
+try { require("dotenv").config({ path: path.join(__dirname, ".env") }); } catch {}
 
 module.exports = {
   BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN || "",
