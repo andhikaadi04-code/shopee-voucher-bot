@@ -39,13 +39,18 @@ Simpan `BOT_ENCRYPTION_KEY` baik-baik — kalau hilang, cookie tersimpan tidak b
 ## Deploy ke Pterodactyl (24/7)
 
 1. Panel → buat **Server** baru, egg **Node.js**.
-2. Upload semua file ini (atau via Git).
-3. Install otomatis jalan (`npm install`) saat pertama start.
+2. Upload semua file ini ke folder server (atau clone dari GitHub).
+3. Bot **install dependency otomatis** saat pertama jalan — tidak perlu `npm install` manual.
 4. Startup command: `node bot.js` (atau `npm start`).
-5. Di tab **Startup / Environment**, set variable:
-   - `TELEGRAM_BOT_TOKEN`
-   - `BOT_ENCRYPTION_KEY` (64 char hex, generate sekali via perintah di atas)
-   - `ADMIN_IDS` (opsional, ID Telegram admin dipisah koma)
+5. **Token & kunci** — JANGAN di Console (itu cuma log). Buat file `.env`
+   di folder bot (Files → New File → nama `.env`), isi:
+   ```
+   TELEGRAM_BOT_TOKEN=token-dari-@BotFather
+   BOT_ENCRYPTION_KEY=64-char-hex-dari-perintah-di-atas
+   ADMIN_IDS=
+   ```
+   `ADMIN_IDS` opsional: ID Telegram admin dipisah koma. Kosong = user
+   pertama yang `/start` jadi admin.
 6. Jalankan server. Database `bot_data.db` otomatis dibuat.
 
 Campaign yang masih open dipulihkan otomatis saat server restart.
