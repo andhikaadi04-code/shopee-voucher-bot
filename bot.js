@@ -64,7 +64,7 @@ async function cmdStart(msg) {
       "1️⃣ <code>/pantau on</code> — notifikasi event voucher baru\n" +
       "2️⃣ <code>/set KODE HH:MM</code> — buat event klaim (contoh: <code>/set SF80 18:00</code>)\n" +
       "3️⃣ Bagikan kode ke user — mereka kirim kode ke bot, ikut otomatis\n\n" +
-      "Perintah: /set /campaigns /batal /pantau /jadwal /hapus /help\n" +
+      "Perintah: /set /campaigns /batal /pantau /jadwal /hapus /tutorial /help\n" +
       "Tempel cookie di sini untuk validasi kode & monitor.");
   } else {
     await send(tid,
@@ -72,7 +72,7 @@ async function cmdStart(msg) {
       "Kirim <b>kode voucher</b> yang diumumkan admin.\n" +
       "Bot verifikasi kode → minta cookie → verifikasi akun → " +
       "klaim otomatis tepat jadwal.\n\n" +
-      "Perintah: /jadwal /batal /hapus /help");
+      "Perintah: /jadwal /batal /hapus /tutorial /help");
   }
 }
 
@@ -84,7 +84,33 @@ async function cmdHelp(msg) {
     "/jadwal — event yang kamu ikuti\n" +
     "/batal <code>ID</code> — " + (admin ? "batalkan event / " : "") + "keluar dari event\n" +
     (admin ? "/pantau <code>on/off</code> — notifikasi voucher baru\n" : "") +
-    "/hapus — hapus cookie & dataku");
+    "/hapus — hapus cookie & dataku\n" +
+    "/tutorial — panduan pasang extension & ambil cookie");
+}
+
+async function cmdTutorial(msg) {
+  const tid = msg.from.id;
+  await send(tid,
+    "🔧 <b>Cara Pasang Extension Cookie Copier</b>\n\n" +
+    "1️⃣ Download file <b>cookie-by-dikadev.zip</b> (dikirim setelah pesan ini 👇)\n" +
+    "2️⃣ Di Kiwi, tap menu ⋮ → <b>Extensions</b>\n" +
+    "3️⃣ Aktifkan <b>Mode developer</b> (kanan atas)\n" +
+    "4️⃣ Tap <b>+ (from .zip/.crx/.user.js)</b>\n" +
+    "5️⃣ Pilih file <b>cookie-by-dikadev.zip</b>\n" +
+    "6️⃣ Beres ✅\n\n" +
+    "🍪 <b>Cara Ambil Cookie Shopee</b>\n\n" +
+    "1️⃣ Buka <b>shopee.co.id</b> & login\n" +
+    "2️⃣ Buka extension <b>Cookie Copier</b> (domain shopee.co.id kepilih otomatis)\n" +
+    "3️⃣ Tap 📋 <b>SALIN SEMUA</b>\n" +
+    "4️⃣ Balik ke bot → <b>tempel (paste)</b> cookie di chat ini\n" +
+    "5️⃣ Cek nama akun & nomor → balas <b>YA</b>\n\n" +
+    "⚠️ Jangan kasih cookie ke orang lain — itu akses akun Shopee kamu.");
+  const zipPath = require("node:path").join(__dirname, "cookie-by-dikadev.zip");
+  if (require("node:fs").existsSync(zipPath)) {
+    try {
+      await bot.sendDocument(tid, zipPath, { caption: "📦 cookie-by-dikadev.zip — Extension Cookie Copier by Dikadev" });
+    } catch (e) { console.error("gagal kirim zip:", e.message); }
+  }
 }
 
 async function cmdSet(msg, args) {
@@ -273,6 +299,7 @@ async function main() {
   bot.onText(/^\/batal(?:\s+(.*))?$/, (m, mm) => cmdBatal(m, (mm[1] || "").trim().split(/\s+/).filter(Boolean)));
   bot.onText(/^\/pantau(?:\s+(.*))?$/, (m, mm) => cmdPantau(m, (mm[1] || "").trim().split(/\s+/).filter(Boolean)));
   bot.onText(/^\/hapus$/, cmdHapus);
+  bot.onText(/^\/tutorial$/, cmdTutorial);
   bot.on("message", (m) => { if (m.text && !m.text.startsWith("/")) onText(m).catch((e) => console.error(e.message)); });
 
   bot.on("polling_error", (e) => console.error("[polling]", e.message));
